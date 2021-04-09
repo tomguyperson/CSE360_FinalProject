@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.table.TableColumn;
-
 import java.awt.*;
 
 public class App {
@@ -8,10 +6,11 @@ public class App {
     public static void main(String[] args) {
         JFrame app = new JFrame();// creating instance of JFrame
         
-        GridLayout mfw = new GridLayout(1, 2);
+        GridBagLayout mfw = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
         app.setLayout(mfw);
 
-        GridLayout buttGrid = new GridLayout(6, 1);
+        GridLayout buttGrid = new GridLayout(5, 3, 10, 20);
         JPanel buttons = new JPanel();
         buttons.setLayout(buttGrid);
         buttons.setVisible(true);
@@ -22,6 +21,7 @@ public class App {
 
         JButton about = new JButton("About");// creating instance of JButton
         //about.setBounds(20, 20, 90, 35);// x axis, y axis, width, height
+        about.setSize(new Dimension(90, 35));
 
         JButton load = new JButton("Load");// creating instance of JButton
         //load.setBounds(20, 100, 90, 35);// x axis, y axis, width, height
@@ -71,6 +71,7 @@ public class App {
         scrol.createVerticalScrollBar();
         //scrol.setBounds(info.getBounds());
         info.setFillsViewportHeight(true);
+        scrol.setSize(extra.getSize());
         
 
         
@@ -89,11 +90,28 @@ public class App {
         buttons.add(save);// adding button in JFrame
         buttons.add(visualize);// adding button in JFrame
         
-        app.add(buttons);
-        app.add(extra);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridheight = 3;
+        c.ipady = 3;
+        c.insets = new Insets(0, 0, 0, 50);
+       
 
-        app.setSize(1200, 800);
-        app.setLayout(null);// using no layout managers
+        app.add(buttons, c);
+
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 0;
+        c.ipady = 40;
+        c.gridheight = 3;
+        c.insets = new Insets(0, 50, 0, 0);
+        
+
+        app.add(extra, c);
+
+        app.setSize(900, 600);
+        //app.setLayout(null);// using no layout managers
         app.setVisible(true);// making the frame visible
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
