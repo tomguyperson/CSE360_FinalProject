@@ -14,13 +14,21 @@ public class Vaccine {
     // Table
     JTable j;
     // Panel for BorderLayout
-    Panel p;
+    JPanel p;
     // JPanel for BoxLayout
     JPanel listPane;
     // JTextArea for About
     JTextArea jta;
     // Panel for Borderlayout for JTextArea
     JTextPane jtp;
+    // Panel for GridLayout
+    JPanel g;
+    // Labels for 'add' GridLayout
+    JLabel id, lname, fname, vtype, vdate, vlocation;
+    // TextFields for 'add' GridLayout
+    JTextField idf, lnamef, fnamef, vtypef, vdatef, vlocationf;
+    // Panel for Add Borderlayout
+    JPanel addBorder;
 
     // Constructor
     Vaccine() {
@@ -44,7 +52,7 @@ public class Vaccine {
         JScrollPane sp = new JScrollPane(j);
 
         // Initializing BorderLayout
-        p = new Panel();
+        p = new JPanel();
         p.setLayout(new BorderLayout());
         p.add(sp, BorderLayout.CENTER);
 
@@ -90,6 +98,7 @@ public class Vaccine {
         // jtp.setText("Team 49\n\nJustin Ngov\nTomas Mesquita\nLuke Burger");
         // Font font = new Font("Arial", Font.PLAIN, 30);
         // jtp.setFont(font);
+        // jtp.setEditable(false);
 
         // LOOK INTO CARDS AND IMPLEMENT CARDLAYOUT TO BE ABLE TO SWAP PANELS
 
@@ -108,26 +117,118 @@ public class Vaccine {
                 jtp.setText("Team 49\n\nJustin Ngov\nTomas Mesquita\nLuke Burger");
                 Font font = new Font("Arial", Font.PLAIN, 30);
                 jtp.setFont(font);
+                jtp.setEditable(false);
                 p.add(jtp, BorderLayout.CENTER);
                 jtp.setVisible(true);
             }
         });
 
+        // Initialize GridLayout
+        g = new JPanel();
+        g.setLayout(new GridLayout(6, 2));
+        g.setBorder(new EmptyBorder(new Insets(50, 150, 50, 150)));
+
+        // Initialize Labels
+        vdate = new JLabel("Date:");
+        id = new JLabel("ID:");
+        lname = new JLabel("Last Name:");
+        fname = new JLabel("First Name:");
+        vtype = new JLabel("Vaccine Type:");
+        vlocation = new JLabel("Vaccine Location:");
+        // Initialize TextFields
+        vdatef = new JTextField();
+        idf = new JTextField();
+        lnamef = new JTextField();
+        fnamef = new JTextField();
+        vtypef = new JTextField();
+        vlocationf = new JTextField();
+        // add labels and textfields to GridLayout
+        g.add(vdate);
+        g.add(vdatef);
+        g.add(id);
+        g.add(idf);
+        g.add(lname);
+        g.add(lnamef);
+        g.add(fname);
+        g.add(fnamef);
+        g.add(vtype);
+        g.add(vtypef);
+        g.add(vlocation);
+        g.add(vlocationf);
+
+        // add GridLayout to BorderLayout
+        addBorder = new JPanel();
+        addBorder.setLayout(new BorderLayout());
+        addBorder.setBorder(new EmptyBorder(new Insets(0, 30, 100, 30)));
+        addBorder.add(g, BorderLayout.CENTER);
+        JButton add2 = new JButton("Add");
+        addBorder.add(add2, BorderLayout.SOUTH);
+
+        p.add(addBorder, BorderLayout.CENTER);
+
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // p.removeAll();
-                // f.setContentPane(jtp);
-                // f.invalidate();
-                // f.validate();
+                addBorder.setVisible(false);
+                jtp.setVisible(false);
+                sp.setVisible(false);
+                // Initialize GridLayout
+                g = new JPanel();
+                g.setLayout(new GridLayout(6, 2));
+                g.setBorder(new EmptyBorder(new Insets(50, 150, 50, 150)));
+
+                // Initialize Labels
+                vdate = new JLabel("Date:");
+                id = new JLabel("ID:");
+                lname = new JLabel("Last Name:");
+                fname = new JLabel("First Name:");
+                vtype = new JLabel("Vaccine Type:");
+                vlocation = new JLabel("Vaccine Location:");
+                // Initialize TextFields
+                vdatef = new JTextField();
+                idf = new JTextField();
+                lnamef = new JTextField();
+                fnamef = new JTextField();
+                vtypef = new JTextField();
+                vlocationf = new JTextField();
+                // add labels and textfields to GridLayout
+                g.add(vdate);
+                g.add(vdatef);
+                g.add(id);
+                g.add(idf);
+                g.add(lname);
+                g.add(lnamef);
+                g.add(fname);
+                g.add(fnamef);
+                g.add(vtype);
+                g.add(vtypef);
+                g.add(vlocation);
+                g.add(vlocationf);
+
+                // add GridLayout to BorderLayout
+                addBorder = new JPanel();
+                addBorder.setLayout(new BorderLayout());
+                addBorder.setBorder(new EmptyBorder(new Insets(0, 30, 100, 30)));
+                addBorder.add(g, BorderLayout.CENTER);
+                JButton add2 = new JButton("Add");
+                addBorder.add(add2, BorderLayout.SOUTH);
+
+                p.add(addBorder, BorderLayout.CENTER);
+                jtp.setVisible(false);
+                sp.setVisible(false);
+                addBorder.setVisible(true);
             }
         });
 
         load.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                jtp.setVisible(false);
+                addBorder.setVisible(false);
+                sp.setVisible(false);
                 p.add(sp, BorderLayout.CENTER);
                 jtp.setVisible(false);
+                addBorder.setVisible(false);
                 sp.setVisible(true);
             }
         });
