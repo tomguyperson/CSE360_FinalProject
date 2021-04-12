@@ -97,8 +97,12 @@ public class Vaccine {
         listPane.add(save);
         listPane.add(Box.createRigidArea(new Dimension(0, 40)));
 
-        JButton visualize = new JButton("Visualize");
+        JButton visualize = new JButton("Visualize (Pie)");
         listPane.add(visualize);
+        listPane.add(Box.createRigidArea(new Dimension(0, 40)));
+
+        JButton visualize2 = new JButton("Visualize (Bar)");
+        listPane.add(visualize2);
 
         // adding BoxLayout to BorderLayout
         p.add(listPane, BorderLayout.WEST);
@@ -283,8 +287,8 @@ public class Vaccine {
 
                     for (int i = 0; i < data1.size(); i++) {
                         tableModel.addRow(new Object[] { data1.get(i).getID(), data1.get(i).getLastName(),
-                                data1.get(i).getFirstName(), data1.get(i).getVaccine(), data1.get(i).getDate(),
-                                data1.get(i).getLocation() });
+                        data1.get(i).getFirstName(), data1.get(i).getVaccine(), data1.get(i).getDate(),
+                        data1.get(i).getLocation() });
                     }
 
                     p.add(sp, BorderLayout.CENTER);
@@ -348,6 +352,69 @@ public class Vaccine {
                     p.repaint();
                     p.revalidate();
                 }
+            }
+        });
+
+        visualize.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                p.remove(layout.getLayoutComponent(BorderLayout.CENTER));
+
+                ArrayList<String> countries = new ArrayList<String>();
+                ArrayList<Integer> numbers = new ArrayList<Integer>();
+
+                Object[][] toSave = getTableData(j);
+                
+                for (int i = 0; i < toSave.length; i++) {
+                    if(countries.contains(toSave[i][5]))
+                    {
+                        numbers.set(countries.indexOf(toSave[i][5]), numbers.get(countries.indexOf(toSave[i][5])) + 1); //increment count of doses in corresponding country
+                    }
+                    else
+                    {
+                        countries.add((String) toSave[i][5]);
+                        numbers.add(1);
+                    }
+                }
+                
+                new PieChart("Number of Doses Administered Per Location", countries, numbers);
+
+                p.add(PieChart.createDemoPanel(), BorderLayout.CENTER);
+                p.repaint();
+                p.revalidate();                
+            }
+        });
+
+        visualize2.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                p.remove(layout.getLayoutComponent(BorderLayout.CENTER));
+
+                ArrayList<String> vaccines = new ArrayList<String>();
+                ArrayList<Integer> numbers = new ArrayList<Integer>();
+
+                Object[][] toSave = getTableData(j);
+                
+                for (int i = 0; i < toSave.length; i++) {
+                    if(vaccines.contains(toSave[i][3]))
+                    {
+                        numbers.set(vaccines.indexOf(toSave[i][3]), numbers.get(vaccines.indexOf(toSave[i][3])) + 1); //increment count of doses in corresponding country
+                    }
+                    else
+                    {
+                        vaccines.add((String) toSave[i][3]);
+                        numbers.add(1);
+                    }
+                }
+                
+                new BarChart("Number of Doses of Each Vaccine Administered", vaccines, numbers);
+
+                p.add(BarChart.createDemoPanel(), BorderLayout.CENTER);
+                p.repaint();
+                p.revalidate();   
             }
         });
 
