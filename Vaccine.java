@@ -5,9 +5,12 @@ import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.JFileChooser;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import java.util.*;
+import java.io.*;
 
 public class Vaccine {
     // frame
@@ -35,6 +38,10 @@ public class Vaccine {
     // Panel for Borderlayout for save JTextArea
     JTextPane savejtp;
 
+    FileReadWrite reader = new FileReadWrite();
+
+    ArrayList<Holder> data1 = new ArrayList<Holder>();
+
     // Constructor
     Vaccine() {
         // Frame initiallization
@@ -51,7 +58,10 @@ public class Vaccine {
         String[] columnNames = { "ID", "Last Name", "First Name", "Vaccine Type", "Vaccine Date", "Vaccine Location" };
 
         // Initializing the JTable
-        j = new JTable(data, columnNames);
+        // j = new JTable(data, columnNames);
+
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        j = new JTable(tableModel);
         j.setBounds(30, 40, 200, 300);
 
         // adding it to JScrollPane
@@ -61,6 +71,9 @@ public class Vaccine {
         p = new JPanel();
         p.setLayout(new BorderLayout());
         p.add(sp, BorderLayout.CENTER);
+
+        ImageIcon img = new ImageIcon(System.getProperty("user.dir") + "\\lib\\dababy.jpg");
+        f.setIconImage(img.getImage());
 
         // Initializing BoxLayout that goes inside of BorderLayout(WEST)
         listPane = new JPanel();
@@ -167,14 +180,35 @@ public class Vaccine {
         g.add(vlocationf);
 
         // add GridLayout to BorderLayout
-        addBorder = new JPanel();
-        addBorder.setLayout(new BorderLayout());
-        addBorder.setBorder(new EmptyBorder(new Insets(0, 30, 100, 30)));
-        addBorder.add(g, BorderLayout.CENTER);
-        JButton add2 = new JButton("Add");
-        addBorder.add(add2, BorderLayout.SOUTH);
+        // addBorder = new JPanel();
+        // addBorder.setLayout(new BorderLayout());
+        // addBorder.setBorder(new EmptyBorder(new Insets(0, 30, 100, 30)));
+        // addBorder.add(g, BorderLayout.CENTER);
+        // JButton add2 = new JButton("Add");
+        // addBorder.add(add2, BorderLayout.SOUTH);
 
-        p.add(addBorder, BorderLayout.CENTER);
+        // p.add(addBorder, BorderLayout.CENTER);
+
+        JButton add2 = new JButton("Add");
+        add2.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tableModel.addRow(new Object[] { idf.getText(), lnamef.getText(), fnamef.getText(), vtypef.getText(),
+                        vdatef.getText(), vlocationf.getText() });
+                idf.setText("");
+                lnamef.setText("");
+                fnamef.setText("");
+                vtypef.setText("");
+                vdatef.setText("");
+                vlocationf.setText("");
+
+                p.remove(layout.getLayoutComponent(BorderLayout.CENTER));
+                p.add(sp, BorderLayout.CENTER);
+                p.repaint();
+                p.revalidate();
+            }
+        });
 
         add.addActionListener(new ActionListener() {
             @Override
@@ -219,7 +253,6 @@ public class Vaccine {
                 addBorder.setLayout(new BorderLayout());
                 addBorder.setBorder(new EmptyBorder(new Insets(0, 30, 100, 30)));
                 addBorder.add(g, BorderLayout.CENTER);
-                JButton add2 = new JButton("Add");
                 addBorder.add(add2, BorderLayout.SOUTH);
 
                 p.add(addBorder, BorderLayout.CENTER);
@@ -232,21 +265,37 @@ public class Vaccine {
             @Override
             public void actionPerformed(ActionEvent e) {
                 p.remove(layout.getLayoutComponent(BorderLayout.CENTER));
-                
+
                 // File Chooser for Load
                 file = new JFileChooser();
                 file.setDialogTitle("Please choose filepath for .csv");
                 file.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 file.setFileHidingEnabled(false);
-                if (file.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                int opened = file.showOpenDialog(null);
+
+                if (opened == JFileChooser.APPROVE_OPTION) {
                     java.io.File f = file.getSelectedFile();
                     filepath = f.getPath();
                     System.err.println(filepath);
+
+                    data1 = reader.read(filepath);
+                    // data = new Holder[data1.size()];
+
+                    for (int i = 0; i < data1.size(); i++) {
+                        tableModel.addRow(new Object[] { data1.get(i).getID(), data1.get(i).getLastName(),
+                                data1.get(i).getFirstName(), data1.get(i).getVaccine(), data1.get(i).getDate(),
+                                data1.get(i).getLocation() });
+                    }
+
+                    p.add(sp, BorderLayout.CENTER);
+                    p.repaint();
+                    p.revalidate();
+                } else if (opened == JFileChooser.CANCEL_OPTION) {
+                    p.add(sp, BorderLayout.CENTER);
+                    p.repaint();
+                    p.revalidate();
                 }
 
-                p.add(sp, BorderLayout.CENTER);
-                p.repaint();
-                p.revalidate();
             }
         });
 
@@ -254,25 +303,53 @@ public class Vaccine {
             @Override
             public void actionPerformed(ActionEvent e) {
                 p.remove(layout.getLayoutComponent(BorderLayout.CENTER));
-                
-                savejtp = new JTextPane();
-                SimpleAttributeSet set = new SimpleAttributeSet();
-                StyleConstants.setBold(set, true);
-                savejtp.setCharacterAttributes(set, true);
-                StyledDocument doc = savejtp.getStyledDocument();
-                SimpleAttributeSet center = new SimpleAttributeSet();
-                StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-                doc.setParagraphAttributes(0, doc.getLength(), center, false);
-                savejtp.setText("\n\n\nData Saved to .csv");
-                Font font = new Font("Arial", Font.PLAIN, 30);
-                savejtp.setFont(font);
-                savejtp.setEditable(false);
-                p.add(savejtp, BorderLayout.CENTER);
-                p.repaint();
-                p.revalidate();
+
+                // JFileChooser fileChooser = new JFileChooser();
+                // if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                // File file = fileChooser.getSelectedFile();
+
+                // }
+
+                JFileChooser fileChooser = new JFileChooser();
+                int opened = fileChooser.showSaveDialog(null);
+                if (opened == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    filepath = file.getPath();
+                    System.err.println(filepath);
+
+                    Object[][] toSave = getTableData(j);
+                    ArrayList<Holder> listOfHolders = new ArrayList<Holder>();
+
+                    for (int i = 0; i < toSave.length; i++) {
+                        listOfHolders.add(new Holder((int) toSave[i][0], (String) toSave[i][1], (String) toSave[i][2],
+                                (String) toSave[i][3], (String) toSave[i][4], (String) toSave[i][5]));
+                    }
+
+                    reader.write(listOfHolders, filepath);
+
+                    savejtp = new JTextPane();
+                    SimpleAttributeSet set = new SimpleAttributeSet();
+                    StyleConstants.setBold(set, true);
+                    savejtp.setCharacterAttributes(set, true);
+                    StyledDocument doc = savejtp.getStyledDocument();
+                    SimpleAttributeSet center = new SimpleAttributeSet();
+                    StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+                    doc.setParagraphAttributes(0, doc.getLength(), center, false);
+                    savejtp.setText("\n\n\nData Saved to .csv");
+                    Font font = new Font("Arial", Font.PLAIN, 30);
+                    savejtp.setFont(font);
+                    savejtp.setEditable(false);
+                    p.add(savejtp, BorderLayout.CENTER);
+                    p.repaint();
+                    p.revalidate();
+                }
+                else if (opened == JFileChooser.CANCEL_OPTION) {
+                    p.add(sp, BorderLayout.CENTER);
+                    p.repaint();
+                    p.revalidate();
+                }
             }
         });
-        
 
         // Frame Size
         f.setSize(800, 600);
@@ -284,6 +361,15 @@ public class Vaccine {
     // Driver method
     public static void main(String[] args) {
         new Vaccine();
+    }
 
+    public Object[][] getTableData(JTable table) {
+        DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+        int nRow = dtm.getRowCount(), nCol = dtm.getColumnCount();
+        Object[][] tableData = new Object[nRow][nCol];
+        for (int i = 0; i < nRow; i++)
+            for (int j = 0; j < nCol; j++)
+                tableData[i][j] = dtm.getValueAt(i, j);
+        return tableData;
     }
 }
