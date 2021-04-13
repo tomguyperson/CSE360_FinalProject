@@ -3,7 +3,7 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import javax.swing.JFileChooser;
+
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.SimpleAttributeSet;
@@ -63,10 +63,33 @@ public class Vaccine {
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         j = new JTable(tableModel);
         j.setBounds(30, 40, 200, 300);
-
+        
+        // TableColumnModel columnModel = j.getColumnModel();
+        // columnModel.getColumn(0).setMinWidth(100);
+        // columnModel.getColumn(2).setMinWidth(100);
+        // columnModel.getColumn(3).setMinWidth(100);
+        // columnModel.getColumn(1).setMinWidth(100);
+        // columnModel.getColumn(4).setMinWidth(100);
+        // columnModel.getColumn(5).setMinWidth(100);
+        
+        // columnModel.getColumn(0).setMaxWidth(100);
+        // columnModel.getColumn(2).setMaxWidth(100);
+        // columnModel.getColumn(3).setMaxWidth(100);
+        // columnModel.getColumn(1).setMaxWidth(100);
+        // columnModel.getColumn(4).setMaxWidth(100);
+        // columnModel.getColumn(5).setMaxWidth(100);
+        
         // adding it to JScrollPane
-        JScrollPane sp = new JScrollPane(j);
-
+        JScrollPane sp = new JScrollPane(j, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        
+        j.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        j.getColumnModel().getColumn(0).setPreferredWidth(100);
+        j.getColumnModel().getColumn(1).setPreferredWidth(100);
+        j.getColumnModel().getColumn(2).setPreferredWidth(100);
+        j.getColumnModel().getColumn(3).setPreferredWidth(110);
+        j.getColumnModel().getColumn(4).setPreferredWidth(110);
+        j.getColumnModel().getColumn(5).setPreferredWidth(110);
+        
         // Initializing BorderLayout
         p = new JPanel();
         p.setLayout(new BorderLayout());
@@ -280,7 +303,7 @@ public class Vaccine {
                 if (opened == JFileChooser.APPROVE_OPTION) {
                     java.io.File f = file.getSelectedFile();
                     filepath = f.getPath();
-                    System.err.println(filepath);
+                    //System.err.println(filepath);
 
                     data1 = reader.read(filepath);
                     // data = new Holder[data1.size()];
@@ -319,7 +342,7 @@ public class Vaccine {
                 if (opened == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
                     filepath = file.getPath();
-                    System.err.println(filepath);
+                    //System.err.println(filepath);
 
                     Object[][] toSave = getTableData(j);
                     ArrayList<Holder> listOfHolders = new ArrayList<Holder>();
