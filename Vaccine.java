@@ -382,7 +382,6 @@ public class Vaccine {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 p.remove(layout.getLayoutComponent(BorderLayout.CENTER));
 
                 ArrayList<String> countries = new ArrayList<String>();
