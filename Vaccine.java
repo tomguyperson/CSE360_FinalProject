@@ -50,38 +50,19 @@ public class Vaccine {
         // Frame Title
         f.setTitle("Vaccines");
 
-        // Data to be displayed in the JTable
-        String[][] data = { { "01234", "Ngov", "Justin", "Pfizer", "1/1/2021", "Cardinals Stadium" },
-                { "56789", "Mesquita", "Tomas", "Pfizer", "1/1/2021", "Cardinals Stadium" } };
-
         // Column Names
         String[] columnNames = { "ID", "Last Name", "First Name", "Vaccine Type", "Vaccine Date", "Vaccine Location" };
 
         // Initializing the JTable
-        // j = new JTable(data, columnNames);
 
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         j = new JTable(tableModel);
         j.setBounds(30, 40, 200, 300);
         
-        // TableColumnModel columnModel = j.getColumnModel();
-        // columnModel.getColumn(0).setMinWidth(100);
-        // columnModel.getColumn(2).setMinWidth(100);
-        // columnModel.getColumn(3).setMinWidth(100);
-        // columnModel.getColumn(1).setMinWidth(100);
-        // columnModel.getColumn(4).setMinWidth(100);
-        // columnModel.getColumn(5).setMinWidth(100);
-        
-        // columnModel.getColumn(0).setMaxWidth(100);
-        // columnModel.getColumn(2).setMaxWidth(100);
-        // columnModel.getColumn(3).setMaxWidth(100);
-        // columnModel.getColumn(1).setMaxWidth(100);
-        // columnModel.getColumn(4).setMaxWidth(100);
-        // columnModel.getColumn(5).setMaxWidth(100);
-        
         // adding it to JScrollPane
         JScrollPane sp = new JScrollPane(j, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         
+        // Size the JTable so that the Columns are a fixed size and horizontal scroll is allowed.
         j.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         j.getColumnModel().getColumn(0).setPreferredWidth(100);
         j.getColumnModel().getColumn(1).setPreferredWidth(100);
@@ -132,20 +113,6 @@ public class Vaccine {
         // adding BorderLayout to frame
         f.add(p);
 
-        // Initialize JTextPane and style it (COMMENTED OUT MOVED TO ONCLICK)
-        // jtp = new JTextPane();
-        // SimpleAttributeSet set = new SimpleAttributeSet();
-        // StyleConstants.setBold(set, true);
-        // jtp.setCharacterAttributes(set, true);
-        // StyledDocument doc = jtp.getStyledDocument();
-        // SimpleAttributeSet center = new SimpleAttributeSet();
-        // StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-        // doc.setParagraphAttributes(0, doc.getLength(), center, false);
-        // jtp.setText("Team 49\n\nJustin Ngov\nTomas Mesquita\nLuke Burger");
-        // Font font = new Font("Arial", Font.PLAIN, 30);
-        // jtp.setFont(font);
-        // jtp.setEditable(false);
-
         // This is here to be able to remove the center of p BorderLayout
         BorderLayout layout = (BorderLayout) p.getLayout();
 
@@ -155,6 +122,7 @@ public class Vaccine {
                 // Line below removes p.BorderLayout.Center
                 p.remove(layout.getLayoutComponent(BorderLayout.CENTER));
 
+                // Initialize JTextPane and style it
                 jtp = new JTextPane();
                 SimpleAttributeSet set = new SimpleAttributeSet();
                 StyleConstants.setBold(set, true);
@@ -206,21 +174,13 @@ public class Vaccine {
         g.add(vlocation);
         g.add(vlocationf);
 
-        // add GridLayout to BorderLayout
-        // addBorder = new JPanel();
-        // addBorder.setLayout(new BorderLayout());
-        // addBorder.setBorder(new EmptyBorder(new Insets(0, 30, 100, 30)));
-        // addBorder.add(g, BorderLayout.CENTER);
-        // JButton add2 = new JButton("Add");
-        // addBorder.add(add2, BorderLayout.SOUTH);
-
-        // p.add(addBorder, BorderLayout.CENTER);
-
         JButton add2 = new JButton("Add");
-        add2.addActionListener(new ActionListener() {
 
+        // ActionListener for add button inside of the Add panel
+        add2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Adds the column titles to the table
                 tableModel.addRow(new Object[] { idf.getText(), lnamef.getText(), fnamef.getText(), vtypef.getText(),
                         vdatef.getText(), vlocationf.getText() });
                 idf.setText("");
@@ -237,9 +197,11 @@ public class Vaccine {
             }
         });
 
+        // ActionListener for add button. 
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Clear BorderLayout Center
                 p.remove(layout.getLayoutComponent(BorderLayout.CENTER));
 
                 // Initialize GridLayout
@@ -288,9 +250,11 @@ public class Vaccine {
             }
         });
 
+        // ActionListener for load button.
         load.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Clear BorderLayout Center
                 p.remove(layout.getLayoutComponent(BorderLayout.CENTER));
 
                 // File Chooser for Load
@@ -303,10 +267,8 @@ public class Vaccine {
                 if (opened == JFileChooser.APPROVE_OPTION) {
                     java.io.File f = file.getSelectedFile();
                     filepath = f.getPath();
-                    //System.err.println(filepath);
 
                     data1 = reader.read(filepath);
-                    // data = new Holder[data1.size()];
 
                     for (int i = 0; i < data1.size(); i++) {
                         tableModel.addRow(new Object[] { data1.get(i).getID(), data1.get(i).getLastName(),
@@ -326,24 +288,20 @@ public class Vaccine {
             }
         });
 
+        // ActionListener for save button
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Clear BorderLayout Center
                 p.remove(layout.getLayoutComponent(BorderLayout.CENTER));
 
-                // JFileChooser fileChooser = new JFileChooser();
-                // if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                // File file = fileChooser.getSelectedFile();
-
-                // }
-
+                // Initialize fileChooser for file selections
                 JFileChooser fileChooser = new JFileChooser();
                 int opened = fileChooser.showSaveDialog(null);
                 if (opened == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
                     filepath = file.getPath();
-                    //System.err.println(filepath);
-
+                    
                     Object[][] toSave = getTableData(j);
                     ArrayList<Holder> listOfHolders = new ArrayList<Holder>();
 
@@ -354,6 +312,7 @@ public class Vaccine {
 
                     reader.write(listOfHolders, filepath);
 
+                    // Create JTextPane to show that the save was completed 
                     savejtp = new JTextPane();
                     SimpleAttributeSet set = new SimpleAttributeSet();
                     StyleConstants.setBold(set, true);
@@ -378,10 +337,11 @@ public class Vaccine {
             }
         });
 
+        // ActionListener for visualize pie button
         visualize.addActionListener(new ActionListener(){
-
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Clear BorderLayout Center
                 p.remove(layout.getLayoutComponent(BorderLayout.CENTER));
 
                 ArrayList<String> countries = new ArrayList<String>();
@@ -389,6 +349,7 @@ public class Vaccine {
 
                 Object[][] toSave = getTableData(j);
                 
+                // Takes data from the table and then uses that to add to the pie chart
                 for (int i = 0; i < toSave.length; i++) {
                     if(countries.contains(toSave[i][5]))
                     {
@@ -409,10 +370,11 @@ public class Vaccine {
             }
         });
 
+        // ActionListener for visualize bar button
         visualize2.addActionListener(new ActionListener(){
-
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Clear BorderLayout Center
                 p.remove(layout.getLayoutComponent(BorderLayout.CENTER));
 
                 ArrayList<String> vaccines = new ArrayList<String>();
@@ -420,6 +382,7 @@ public class Vaccine {
 
                 Object[][] toSave = getTableData(j);
                 
+                // Takes data from the table and then uses that to add to the bar chart
                 for (int i = 0; i < toSave.length; i++) {
                     if(vaccines.contains(toSave[i][3]))
                     {
@@ -452,6 +415,7 @@ public class Vaccine {
         new Vaccine();
     }
 
+    // Method to get the data from the table
     public Object[][] getTableData(JTable table) {
         DefaultTableModel dtm = (DefaultTableModel) table.getModel();
         int nRow = dtm.getRowCount(), nCol = dtm.getColumnCount();
