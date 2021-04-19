@@ -14,32 +14,38 @@ public class BarChart extends ApplicationFrame {
    private static ArrayList<String> vaccines;
    private static ArrayList<Integer> number;
 
+   // constructor to initialize values
    public BarChart(String chartTitle, ArrayList<String> vaccines, ArrayList<Integer> number) {
-      super("no");
+      super("no"); // needs filler string arg
+
+      // initialize values to be used in chart
       this.vaccines = vaccines;
       this.number = number;
    }
 
+   // method to create the chart
    private static JFreeChart createChart(DefaultCategoryDataset dataset) {
-      JFreeChart chart = ChartFactory.createBarChart("Number of Doses of Each Vaccine Administered", "Vaccine", "Number of Doses", createDataset(),
-            PlotOrientation.VERTICAL, false, true, false);
+      JFreeChart chart = ChartFactory.createBarChart("Number of Doses of Each Vaccine Administered", "Vaccine",
+            "Number of Doses", createDataset(), PlotOrientation.VERTICAL, false, true, false);
 
       return chart;
-  }
-
-   private static DefaultCategoryDataset createDataset() {
-      DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
-      for(int i = 0; i < number.size(); i++)
-      {
-         dataset.addValue(number.get(i), "Vaccine", vaccines.get(i));
-      }
-
-      return dataset;
    }
 
+   //create dataset to be used by createChart
+   private static DefaultCategoryDataset createDataset() {
+      //declare dataset
+      DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+      for (int i = 0; i < number.size(); i++) {
+         dataset.addValue(number.get(i), "Vaccine", vaccines.get(i)); //initialize values from users
+      }
+
+      return dataset; //return dataset
+   }
+
+   //returns the chart as a JPanel so that it can be added to the JFrame
    public static JPanel createDemoPanel() {
       JFreeChart chart = createChart(createDataset());
       return new ChartPanel(chart);
-   }   
+   }
 }
